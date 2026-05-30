@@ -66,6 +66,14 @@ bolsa-familia-2020/
 
 ---
 
+## Visualização
+
+O notebook completo pode ser visualizado sem instalação pelo NBViewer:
+
+[Abrir 01-EDA.ipynb no NBViewer](https://nbviewer.org/github/LuizGFS001/bolsa-familia-2020-eda/blob/main/notebooks/01-EDA.ipynb)
+
+---
+
 ## Como Executar
 
 ### Requisitos

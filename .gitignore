@@ -11,5 +11,8 @@ __pycache__/
 *.pyo
 .env
 
-# Scripts de teste internos
+# Scripts de geração e teste (internos)
 notebooks/test_cells.py
+notebooks/build_notebook.py
+notebooks/build_duckdb_notebook.py
+notebooks/inject_outputs.py

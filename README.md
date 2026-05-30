@@ -47,19 +47,22 @@ Análise dos pagamentos do programa Bolsa Família ao longo de 2020 usando dados
 ```
 bolsa-familia-2020/
 ├── data/
-│   ├── bronze/        → CSVs brutos do Portal da Transparência (não versionados)
-│   ├── silver/        → (vazio — silver é uma DuckDB VIEW, não materializada)
-│   └── gold/          → Resultados agregados: 9 CSVs + 13 PNGs
+│   ├── bronze/    → CSVs brutos do Portal da Transparência (não versionados, 17 GB)
+│   ├── silver/    → não materializado — silver é uma DuckDB VIEW gerada em tempo de execução
+│   └── gold/      → resultados agregados: 9 CSVs + 13 PNGs
 ├── notebooks/
-│   └── 01-EDA.ipynb   → Notebook principal com 15 perguntas de análise
+│   └── 01-EDA.ipynb   → notebook principal com 15 perguntas de análise
+├── sql/
+│   ├── silver_view.sql → definição da view de limpeza (DuckDB)
+│   └── p01_*.sql … p15_*.sql → queries de análise documentadas
 └── README.md
 ```
 
 ### Arquitetura bronze → silver → gold
 
 - **Bronze:** CSVs brutos, sem modificação. Fonte imutável.
-- **Silver:** View DuckDB criada em tempo de execução — normaliza colunas, converte tipos e adiciona coluna `regiao`. Não é materializada em disco (evitar duplicar 17 GB para um projeto de análise pontual).
-- **Gold:** Resultados exportados como CSV e PNG após a análise completa.
+- **Silver:** View DuckDB criada em tempo de execução — normaliza colunas (snake_case), converte `VALOR PARCELA` de string BR para `DOUBLE` e deriva a coluna `regiao` a partir da UF. Não é materializada em disco para evitar duplicar 17 GB.
+- **Gold:** Resultados das 15 queries exportados como CSV e PNG.
 
 ---
 

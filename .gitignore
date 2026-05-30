@@ -1,0 +1,15 @@
+# Dados brutos — não versionar (17 GB)
+data/bronze/
+
+# Checkpoints do Jupyter
+notebooks/.ipynb_checkpoints/
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Scripts de teste internos
+notebooks/test_cells.py

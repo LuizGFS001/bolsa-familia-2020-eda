@@ -1,20 +1,20 @@
-# Bolsa Família 2020 — Análise Exploratória de Dados
+# Bolsa Família 2020: Análise Exploratória de Dados
 
-Análise dos pagamentos do programa Bolsa Família ao longo de 2020 usando dados abertos do governo federal brasileiro. O projeto processa **~160 milhões de registros (17,6 GB)** com DuckDB e extrai insights sobre cobertura, distribuição regional e o impacto da pandemia de Covid-19 no programa.
+Analisei os pagamentos do Bolsa Família em 2020 com os dados abertos do governo federal. São **cerca de 160 milhões de registros (17,6 GB)**, processados com DuckDB, olhando pra cobertura do programa, como o dinheiro se distribui pelo país e o efeito da pandemia nos números.
 
 ---
 
 ## Principais Achados
 
-1. **A pandemia está visível nos dados** — o total pago saltou +7,2% em abril de 2020 (mês do lockdown nacional) e nunca voltou ao patamar anterior. Foram ~1,2M de novas famílias incluídas de forma permanente.
+1. A pandemia aparece nos dados de um jeito bem claro. O total pago subiu **7,2% em abril de 2020**, mês do lockdown nacional, e nunca voltou ao patamar de antes. Entrou cerca de 1,2 milhão de famílias novas no programa, e ficaram.
 
-2. **Nordeste domina em volume, Norte em intensidade** — o Nordeste concentra 49,4% dos beneficiários e 51,1% do gasto. Já o Norte tem a maior parcela média regional (R$ 210/família), refletindo famílias maiores e pobreza mais profunda.
+2. O **Nordeste domina em volume**: concentra 49,4% dos beneficiários e 51,1% do gasto. Mas quem recebe mais por família, na média, é o Norte (R$ 210), reflexo de famílias maiores e pobreza mais profunda na região.
 
-3. **O programa é mais distribuído do que parece** — os top 5 estados concentram apenas 46% do gasto total, indicando calibração pela incidência de pobreza, não por peso político.
+3. O programa é mais espalhado do que eu esperava antes de olhar os números. Os 5 estados que mais recebem concentram só 46% do gasto total, o que sugere que a distribuição segue a incidência de pobreza, não peso político.
 
-4. **Municípios indígenas amazônicos lideram em parcela média** — Uiramutã (RR) registra R$ 445 por parcela, 2,3× a média nacional. O top 20 é dominado por municípios do Acre, Amazonas e Roraima.
+4. Os municípios com maior parcela média ficam todos na Amazônia. **Uiramutã (RR)** lidera com R$ 445, mais que o dobro da média nacional, e o top 20 inteiro é Acre, Amazonas e Roraima.
 
-5. **86,8% dos beneficiários receberam em todos os 12 meses** — o Bolsa Família foi renda permanente, não eventual, para 12,7 milhões de famílias em 2020.
+5. **86,8% dos beneficiários** receberam o programa nos 12 meses do ano. Para 12,7 milhões de famílias, o Bolsa Família não foi um auxílio pontual em 2020, foi renda garantida o ano inteiro.
 
 ---
 
@@ -22,9 +22,9 @@ Análise dos pagamentos do programa Bolsa Família ao longo de 2020 usando dados
 
 | Atributo | Detalhe |
 |---|---|
-| Fonte | [Portal da Transparência — Bolsa Família Pagamentos](https://portaldatransparencia.gov.br/download-de-dados/bolsa-familia-pagamentos) |
-| Período | Janeiro–Dezembro 2020 (12 arquivos mensais) |
-| Volume | ~17,6 GB, ~160 milhões de linhas |
+| Fonte | [Portal da Transparência: Bolsa Família Pagamentos](https://portaldatransparencia.gov.br/download-de-dados/bolsa-familia-pagamentos) |
+| Período | Janeiro a Dezembro 2020 (12 arquivos mensais) |
+| Volume | Cerca de 17,6 GB, cerca de 160 milhões de linhas |
 | Formato | CSV com separador `;`, decimal `,`, encoding Latin-1 |
 
 > Os CSVs brutos não estão incluídos no repositório. Baixe os 12 arquivos de 2020 no Portal da Transparência e coloque em `data/bronze/`.
@@ -37,8 +37,9 @@ Análise dos pagamentos do programa Bolsa Família ao longo de 2020 usando dados
 |---|---|---|
 | Query engine | **DuckDB** | Lê CSV direto sem carregar em memória, SQL analítico nativo |
 | Análise | **Python + Pandas** | Manipulação de DataFrames |
-| Visualização | **Matplotlib + Seaborn** | Gráficos para o notebook |
+| Visualização (notebook) | **Matplotlib + Seaborn** | Gráficos estáticos para o notebook |
 | Notebook | **Jupyter** | Formato padrão de portfólio |
+| Dashboard | **Streamlit + Plotly** | Exploração interativa dos resultados, sem precisar rodar código |
 
 ---
 
@@ -48,20 +49,23 @@ Análise dos pagamentos do programa Bolsa Família ao longo de 2020 usando dados
 bolsa-familia-2020/
 ├── data/
 │   ├── bronze/    → CSVs brutos do Portal da Transparência (não versionados, 17 GB)
-│   ├── silver/    → não materializado — silver é uma DuckDB VIEW gerada em tempo de execução
-│   └── gold/      → resultados agregados: 9 CSVs + 13 PNGs
+│   ├── silver/    → não materializado (view DuckDB gerada em tempo de execução)
+│   └── gold/      → resultados agregados: 15 CSVs + 12 PNGs
 ├── notebooks/
 │   └── 01-EDA.ipynb   → notebook principal com 15 perguntas de análise
 ├── sql/
 │   ├── silver_view.sql → definição da view de limpeza (DuckDB)
 │   └── p01_*.sql … p15_*.sql → queries de análise documentadas
+├── .streamlit/
+│   └── config.toml    → tema escuro customizado do dashboard
+├── dashboard.py        → dashboard interativo em Streamlit
 └── README.md
 ```
 
 ### Arquitetura bronze → silver → gold
 
 - **Bronze:** CSVs brutos, sem modificação. Fonte imutável.
-- **Silver:** View DuckDB criada em tempo de execução — normaliza colunas (snake_case), converte `VALOR PARCELA` de string BR para `DOUBLE` e deriva a coluna `regiao` a partir da UF. Não é materializada em disco para evitar duplicar 17 GB.
+- **Silver:** View DuckDB criada em tempo de execução, que normaliza colunas (snake_case), converte `VALOR PARCELA` de string BR para `DOUBLE` e deriva a coluna `regiao` a partir da UF. Não é materializada em disco para evitar duplicar 17 GB.
 - **Gold:** Resultados das 15 queries exportados como CSV e PNG.
 
 ---
@@ -71,6 +75,28 @@ bolsa-familia-2020/
 O notebook completo pode ser visualizado sem instalação pelo NBViewer:
 
 [Abrir 01-EDA.ipynb no NBViewer](https://nbviewer.org/github/LuizGFS001/bolsa-familia-2020-eda/blob/main/notebooks/01-EDA.ipynb)
+
+---
+
+## Dashboard Interativo
+
+Além do notebook, o projeto tem um dashboard em Streamlit para navegar pelos resultados sem precisar rodar código nenhum. Ele lê direto os CSVs já exportados em `data/gold/`, então funciona mesmo sem reprocessar os 17 GB do bronze.
+
+O conteúdo está dividido em quatro abas:
+
+- **Visão Geral**: evolução mensal de beneficiários, total pago e variação percentual
+- **Geografia**: ranking de estados, distribuição por região e valor médio da parcela, com filtro por UF na barra lateral
+- **Municípios**: top 20 por total pago e por parcela média
+- **Perfil do Beneficiário**: quantos meses cada família recebeu o benefício e a distribuição dos valores de parcela
+
+### Rodar o dashboard
+
+```bash
+pip install streamlit plotly
+streamlit run dashboard.py
+```
+
+O navegador abre sozinho, normalmente em `localhost:8501`.
 
 ---
 
@@ -97,7 +123,7 @@ jupyter notebook notebooks/01-EDA.ipynb
 
 Execute todas as células em ordem (Kernel → Restart & Run All). Os resultados serão exportados automaticamente para `data/gold/`.
 
-> **Tempo estimado:** 30–60 minutos dependendo do hardware (leitura e processamento de 17 GB via DuckDB).
+> **Tempo estimado:** 30 a 60 minutos dependendo do hardware (leitura e processamento de 17 GB via DuckDB).
 
 ---
 

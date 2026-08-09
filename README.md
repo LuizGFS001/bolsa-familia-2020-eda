@@ -89,6 +89,21 @@ O conteúdo está dividido em quatro abas:
 - **Municípios**: top 20 por total pago e por parcela média
 - **Perfil do Beneficiário**: quantos meses cada família recebeu o benefício e a distribuição dos valores de parcela
 
+<table>
+<tr>
+<td><img src="docs/screenshots/dashboard-visao-geral-1.png" alt="Visão Geral: KPIs e evolução de beneficiários"></td>
+<td><img src="docs/screenshots/dashboard-visao-geral-2.png" alt="Visão Geral: pagamentos por mês e variação mensal"></td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/dashboard-geografia-1.png" alt="Geografia: ranking de beneficiários por estado"></td>
+<td><img src="docs/screenshots/dashboard-geografia-2.png" alt="Geografia: total por região e evolução no ano"></td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/dashboard-municipios.png" alt="Top 20 municípios por total pago e por parcela média"></td>
+<td><img src="docs/screenshots/dashboard-perfil.png" alt="Perfil do beneficiário: continuidade e distribuição de valores"></td>
+</tr>
+</table>
+
 ### Rodar o dashboard
 
 ```bash

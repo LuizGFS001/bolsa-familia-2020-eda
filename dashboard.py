@@ -171,7 +171,7 @@ with tab4:
     col2.metric(label="Mediana", value=f"{mediana:.0f} meses")
     
     df_continuidade = continuidade()
-    fig = px.bar(df_continuidade, x="meses_recebidos", y="beneficiarios", title="Quantos meses cada um recebeu o benefício")
+    fig = px.bar(df_continuidade, x="meses_recebidos", y="beneficiarios", title="Quantos meses cada pessoa recebeu o benefício")
     st.plotly_chart(fig, key="grafico_continuidade")
     
     distribuicao = amostra_distribuicao_valores()
